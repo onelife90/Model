@@ -25,6 +25,10 @@ def get_scales(m):
 
 ratios = [1, 2, 3, 0.5, 0.33]
 def get_width_height(scales):
+    """
+    get default box width, height for feature map k
+    all values are relative ration to input image width, height
+    """
     width_heights = []
     for k, scale in enumerate(scales):
         print(f'k: {k+1} scale: {scale}')
