@@ -37,8 +37,8 @@ def get_width_height(scales):
             if k < len(scales) -1:
                 extra_scale = round(math.sqrt(scale * scales[k+1]), 2)
                 width_height_per_scale.append((extra_scale, extra_scale))
-                print(f'width: {extra_scale} height: {extra_scale}')
             width_heights.append(width_height_per_scale)
+        print(f'width: {extra_scale} height: {extra_scale}')
         print('')
     return width_heights
 
