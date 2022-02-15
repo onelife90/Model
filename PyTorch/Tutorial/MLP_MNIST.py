@@ -1,3 +1,4 @@
+from pickle import TRUE
 import pandas as pd
 from sklearn.model_selection import train_test_split
 import torch
@@ -97,3 +98,57 @@ optimizer = optim.Adam(model.parameters(), lr=1e-3)
 print(f"Model:\t{model}")
 print(f"Device:\t{DEVICE}")
 
+# definite train & evaluate
+def train(model, train_loader, optimizer):
+    model.train()
+    for batch_idx, (data, target) in enumerate(train_loader):
+        data, target = data.to(DEVICE), target.to(DEVICE)
+        
+        # optimizer initalize -> output -> loss -> Back-Propagation -> optimizer step
+        optimizer.zero_grad()
+        output = model(data)
+        
+        # Debug: nll_loss not implemented for 'float' error
+        target = target.to(torch.int64)    
+                
+        loss = F.cross_entropy(output, target)
+        loss.backward()
+        optimizer.step()
+        
+        if batch_idx % 100 == 0:
+            print("Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}".format\
+                  (epoch, batch_idx * len(data), len(train_loader.dataset),\
+                  100. * batch_idx / len(train_loader), loss.item()))
+
+def evaluate(model, valid_loader):
+    model.eval()
+    valid_loss = 0
+    correct = 0
+    
+    with torch.no_grad():
+        for data, target in valid_loader:
+            data, target = data.to(DEVICE), target.to(DEVICE)
+            output = model(data)
+            
+            # Debug: nll_loss not implemented for 'float' error
+            target = target.to(torch.int64)    
+            
+            valid_loss += F.cross_entropy(output, target, reduction="sum").item()
+            prediction = output.max(1, keepdim=True)[1]
+            correct += prediction.eq(target.view_as(prediction)).sum().item()
+            
+    valid_loss /= len(valid_loader.dataset)
+    valid_accuracy = 100. * correct / len(valid_loader.dataset)
+    
+    return valid_loss, valid_accuracy
+
+
+"""Training"""
+EPOCHS = 10
+for epoch in range(1, EPOCHS + 1):
+    train(model, train_loader, optimizer)
+    valid_loss, valid_accuracy = evaluate(model, valid_loader)
+    
+    print(f"[EPOCH: {epoch}],\t\
+          validation loss: {valid_loss:.4f},\t\
+          validation Accuracy:\t{valid_accuracy:.2f}%\n")
