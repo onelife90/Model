@@ -131,7 +131,7 @@ def evaluate(model, valid_loader):
             output = model(data)
             
             # Debug: nll_loss not implemented for 'float' error
-            target = target.to(torch.int64)    
+            target = target.to(torch.int64)
             
             valid_loss += F.cross_entropy(output, target, reduction="sum").item()
             prediction = output.max(1, keepdim=True)[1]
@@ -152,3 +152,21 @@ for epoch in range(1, EPOCHS + 1):
     print(f"[EPOCH: {epoch}],\t\
           validation loss: {valid_loss:.4f},\t\
           validation Accuracy:\t{valid_accuracy:.2f}%\n")
+
+
+# predict test dataset
+def testset_prediction(model, test_images_tensor):
+    model.eval()
+    result = []
+    
+    with torch.no_grad():
+        for data in test_images_tensor:
+            data = data.to(DEVICE)
+            output = model(data)
+            prediction = output.max(1, keepdim=True)[1]
+            result.append(prediction.tolist())
+            
+    return result
+
+test_predict_result = testset_prediction(model, test_images_tensor)
+print(test_predict_result[:5])
