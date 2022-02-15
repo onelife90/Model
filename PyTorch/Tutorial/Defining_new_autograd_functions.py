@@ -50,7 +50,7 @@ for t in range(500):
     # using Function.apply method for custom Function
     relu = MyReLU.apply
 
-    # Forward-Propagation: calcluate the predict y using Tensor operation
+    # Feedforward: calcluate the predict y using Tensor operation
     y_pred = relu(x.mm(w1)).mm(w2)
 
     loss = (y_pred - y).pow(2).sum()

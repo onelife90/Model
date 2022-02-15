@@ -25,7 +25,7 @@ learning_rate = 1e-4
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
 for t in range(500):
-    # Forward-Propagation: model input(x) predict(y)
+    # Feedforward: model input(x) predict(y)
     y_pred = model(x)
 
     loss = loss_fn(y_pred, y)

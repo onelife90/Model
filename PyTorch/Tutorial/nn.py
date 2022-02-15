@@ -24,7 +24,7 @@ loss_fn = torch.nn.MSELoss(reduction="sum")
 learning_rate = 1e-6
 
 for t in range(500):
-    # Forward-Propagation: model input(x) predict(y)
+    # Feedforward: model input(x) predict(y)
     y_pred = model(x)
 
     loss = loss_fn(y_pred, y)

@@ -4,7 +4,7 @@ import torch
 class DynamicNet(torch.nn.Module):
     def __init__(self, D_in, H, D_out):
         """
-        initialize three nn.Linear instances using Forward-Propagation
+        initialize three nn.Linear instances using Feedforward
         """
         super(DynamicNet, self).__init__()
         self.input_linear = torch.nn.Linear(D_in, H)
@@ -13,7 +13,7 @@ class DynamicNet(torch.nn.Module):
 
     def forward(self, x):
         """
-        Forward-Propagation: reuse middle_linear for calculating hidden layer
+        Feedforward: reuse middle_linear for calculating hidden layer
         computational graph: perfectly safe to reuse the same module multiple times
         """        
         h_relu = self.input_linear(x).clamp(min=0)
@@ -46,7 +46,7 @@ criterion = torch.nn.MSELoss(reduction="sum")
 optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, momentum=0.9)
 
 for t in range(500):
-    # Forward-Propagation: model input(x) predict(y)
+    # Feedforward: model input(x) predict(y)
     y_pred = model(x)
 
     loss = criterion(y_pred, y)

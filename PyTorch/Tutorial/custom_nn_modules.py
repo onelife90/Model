@@ -37,7 +37,7 @@ criterion = torch.nn.MSELoss(reduction="sum")
 optimizer = torch.optim.SGD(model.parameters(), lr=1e-4)
 
 for t in range(500):
-    # Forward-Propagation: model input(x) predict(y)
+    # Feedforward: model input(x) predict(y)
     y_pred = model(x)
 
     loss = criterion(y_pred, y)
