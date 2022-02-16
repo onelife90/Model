@@ -58,19 +58,20 @@ print(f"Shape of valid images: {valid_images.shape}\n")
 print(f"Shape of test images: {test_images.shape}\n")
 
 # make dataloader to feed on MLP model
-train_images_tensor = torch.Tensor(train_images)
-train_labels_tensor = torch.Tensor(train_labels)
+# change train_images: ndarray -> tensor
+train_images_tensor = torch.tensor(train_images)
+train_labels_tensor = torch.tensor(train_labels)
 
 train_tensor = TensorDataset(train_images_tensor, train_labels_tensor)
 train_loader = DataLoader(train_tensor, batch_size=64, num_workers=0, shuffle=True)
 
-valid_images_tensor = torch.Tensor(valid_images)
-valid_labels_tensor = torch.Tensor(valid_labels)
+valid_images_tensor = torch.tensor(valid_images)
+valid_labels_tensor = torch.tensor(valid_labels)
 
 valid_tensor = TensorDataset(valid_images_tensor, valid_labels_tensor)
 valid_loader = DataLoader(valid_tensor, batch_size=64, num_workers=0, shuffle=True)
 
-test_images_tensor = torch.Tensor(test_images)
+test_images_tensor = torch.tensor(test_images)
 
 # create MLP model
 class MLP(nn.Module):
@@ -108,9 +109,6 @@ def train(model, train_loader, optimizer):
         optimizer.zero_grad()
         output = model(data)
         
-        # Debug: nll_loss not implemented for 'float' error
-        target = target.to(torch.int64)    
-                
         loss = F.cross_entropy(output, target)
         loss.backward()
         optimizer.step()
@@ -129,9 +127,6 @@ def evaluate(model, valid_loader):
         for data, target in valid_loader:
             data, target = data.to(DEVICE), target.to(DEVICE)
             output = model(data)
-            
-            # Debug: nll_loss not implemented for 'float' error
-            target = target.to(torch.int64)
             
             valid_loss += F.cross_entropy(output, target, reduction="sum").item()
             prediction = output.max(1, keepdim=True)[1]
